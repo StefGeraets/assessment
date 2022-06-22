@@ -1,18 +1,31 @@
 import { InputNode, NodeId, NodeTypes, OutputNode, DelayNode } from "./index.d"
+const readline = require('readline');
 
 const REGEX = /\$[^\s\,\.\!\?\:]+/g;
+
+const rl = readline.createInterface({
+  input: process.stdin,
+  output: process.stdout
+});
 
 export const nodeHandler = (nodes: NodeTypes[]) => {
   const systemVars: {[K: string]: string}[] = [];
 
-  const getInputValue = (inputValue?: string): string => {
-    return inputValue ? inputValue : "standard input";
+  const getInputValue = async (node: InputNode): Promise<string> => {
+    return new Promise((resolve) => {
+      rl.question(`Give input for ${node.varName}: `, (inputValue: string) => {
+        resolve(inputValue);
+      });
+    }); 
   }
 
-  const inputHandler = (node: InputNode): void => {
-    const inputValue = getInputValue();
-    systemVars.push({[`$${node.varName}`]: inputValue});
-    nextNodeById(node.next);
+  const inputHandler = (node: InputNode): void => {   
+    const inputValue = getInputValue(node).then(val => {
+      systemVars.push({[`$${node.varName}`]: val});
+    }).finally(() => {
+        nextNodeById(node.next);
+      }
+    );
   }
   
   const outputHandler = (node: OutputNode): void => {
@@ -21,10 +34,10 @@ export const nodeHandler = (nodes: NodeTypes[]) => {
     nextNodeById(node.next);
   }
 
-  const delayHandler = (node: DelayNode): void => {
-    printToConsole(`${{...node}}`);
-    nextNodeById(node.next);
-  }
+  // const delayHandler = (node: DelayNode): void => {
+  //   printToConsole(`${{...node}}`);
+  //   nextNodeById(node.next);
+  // }
 
   const parseString = (input: string): string => {
     const regex = REGEX;
@@ -71,9 +84,9 @@ export const nodeHandler = (nodes: NodeTypes[]) => {
       case "output":
         outputHandler(node);
         break;
-      case "delay":
-        delayHandler(node);
-        break;
+      // case "delay":
+      //   delayHandler(node);
+      //   break;
       default:
         printToConsole("No more steps to take");
         break;
