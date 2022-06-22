@@ -1,0 +1,38 @@
+[
+  {
+    "id": 1,
+    "type": "input",
+    "varName": "$value1",
+    "next": 2
+  },
+  {
+    "id": 2,
+    "type": "output",
+    "text": "This outputs with variable in string: $value1",
+    "next": 3
+  },
+  {
+    "id": 3,
+    "type": "output",
+    "text": "This does not use variable in string",
+    "next": 4
+  },
+  {
+    "id": 4,
+    "type": "input",
+    "varName": "$value2",
+    "next": 5
+  },
+  {
+    "id": 5,
+    "type": "output",
+    "text": "It outputs something",
+    "next": 6
+  },
+  {
+    "id": 6,
+    "type": "output",
+    "text": "This replaces $value2, you see?",
+    "next": 7
+  }
+]

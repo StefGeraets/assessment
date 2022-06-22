@@ -1,5 +1,6 @@
 import { InputNode, NodeId, NodeTypes, OutputNode } from "./index.d"
 
+const REGEX = /\$[^\s\,\.\!\?\:]+/g;
 
 export const nodeHandler = (nodes: NodeTypes[]) => {
   const systemVars: {[K: string]: string}[] = [];
@@ -13,7 +14,7 @@ export const nodeHandler = (nodes: NodeTypes[]) => {
     systemVars.push({[`$${node.varName}`]: inputValue});
     nextNodeById(node.next);
   }
-
+  
   const outputHandler = (node: OutputNode): void => {
     const parsedString = parseString(node.text);
     printToConsole(parsedString);
@@ -21,7 +22,7 @@ export const nodeHandler = (nodes: NodeTypes[]) => {
   }
 
   const parseString = (input: string): string => {
-    const regex = /\$[^\s]+/g;
+    const regex = REGEX;
     const varMatch: string[] | null = input.match(regex);
 
     if (varMatch?.length && systemVars?.length) {
@@ -53,6 +54,7 @@ export const nodeHandler = (nodes: NodeTypes[]) => {
       executeNodeByType(nextNode);
       return
     }
+    printToConsole("No more steps to take");
     return
   }
 
@@ -61,14 +63,19 @@ export const nodeHandler = (nodes: NodeTypes[]) => {
       case "input":
         inputHandler(node);
         break;
-      case "output":
+        case "output":
         outputHandler(node);
         break;
       default:
+        printToConsole("No more steps to take");
         break;
     }
   }
 
-  return {inputHandler, outputHandler, systemVars}
+  const start = () => {
+    executeNodeByType(nodes[0]);
+  }
+
+  return {inputHandler, outputHandler, start}
 }
 
