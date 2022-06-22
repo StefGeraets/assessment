@@ -1,8 +1,9 @@
-import { nodeHandler } from "./system";
+import { nodeHandler } from "./testSystem";
 
-describe.only("NodeHandler", () => {
+describe("NodeHandler", () => {
   it("should accept array of nodes", () => {
     const logSpy = jest.spyOn(console, "log");
+
     const newSystem = nodeHandler([
       {
         "id": 1,
@@ -19,7 +20,7 @@ describe.only("NodeHandler", () => {
     ])
     
     newSystem.start();
-
+    
     expect(logSpy).toHaveBeenCalledTimes(2);
     expect(logSpy).toHaveBeenCalledWith("Some value");
   });
@@ -55,7 +56,29 @@ describe.only("NodeHandler", () => {
     expect(logSpy).toHaveBeenCalledWith("Second value");
   });
 
-  it.todo("should handle input nodes correctly");
+  it.skip("should handle input nodes correctly", async () => {
+    const logSpy = jest.spyOn(console, "log");
+
+    const newSystem = nodeHandler([
+      {
+        "id": 1,
+        "type": "input",
+        "varName": "value1",
+        "next": 2,
+      },
+      {
+        "id": 2,
+        "type": "output",
+        "text": "Some value $value1",
+        "next": 3
+      }
+    ])
+    
+    newSystem.start();
+    
+    expect(logSpy).toHaveBeenCalledTimes(1);
+    expect(logSpy).toHaveBeenCalledWith("Some value userInput");
+  });
 
   it("should print when output node is present", () => {
     const logSpy = jest.spyOn(console, "log");
@@ -106,7 +129,7 @@ describe.only("NodeHandler", () => {
     newSystem.start();
 
     expect(logSpy).toHaveBeenCalledTimes(3);
-    expect(logSpy).toHaveBeenCalledWith("Some value here standard input");
+    expect(logSpy).toHaveBeenCalledWith("Some value here userInput");
     expect(logSpy).toHaveBeenCalledWith("Second value");
   });
 
@@ -130,7 +153,7 @@ describe.only("NodeHandler", () => {
     newSystem.start();
 
     expect(logSpy).toHaveBeenCalledTimes(2);
-    expect(logSpy).toHaveBeenCalledWith("Some value here standard input");
+    expect(logSpy).toHaveBeenCalledWith("Some value here userInput");
     expect(logSpy).toHaveBeenCalledWith("No more steps to take");
   });
 })

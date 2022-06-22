@@ -1,6 +1,6 @@
 import { nodeHandler } from "./system"
 
-describe("Input", () => {
+describe.skip("Input", () => {
   it("should take an input", () => {
     const newSystem = nodeHandler([{id: 1, type: "input", next: 2, varName: "henk"}]);
     newSystem.inputHandler({id: 1, type: "input", next: 2, varName: "henk"});
@@ -18,7 +18,7 @@ describe("Input", () => {
   })
 })
 
-describe("Output", () => {
+describe.skip("Output", () => {
   it("should print output", () => {
     console.log = jest.fn();
     const newSystem = nodeHandler([{id: 1, type: "output", next: 2, text: "This should output"}]);

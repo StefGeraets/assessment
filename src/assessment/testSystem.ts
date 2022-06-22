@@ -1,31 +1,18 @@
-import { InputNode, NodeId, NodeTypes, OutputNode, DelayNode } from "./index.d"
-const readline = require('readline');
+import { InputNode, NodeId, NodeTypes, OutputNode, DelayNode } from "."
 
 const REGEX = /\$[^\s\,\.\!\?\:]+/g;
-
-const rl = readline.createInterface({
-  input: process.stdin,
-  output: process.stdout
-});
 
 export const nodeHandler = (nodes: NodeTypes[]) => {
   const systemVars: {[K: string]: string}[] = [];
 
-  const getInputValue = async (node: InputNode): Promise<string> => {
-    return new Promise((resolve) => {
-      rl.question(`Give input for ${node.varName}: `, (inputValue: string) => {
-        resolve(inputValue);
-      });
-    }); 
+  const getInputValue = (node: InputNode) => {
+    return "userInput";
   }
 
   const inputHandler = (node: InputNode): void => {
-    const inputValue = getInputValue(node).then(val => {
-      systemVars.push({[`$${node.varName}`]: val});
-    }).finally(() => {
-        nextNodeById(node.next);
-      }
-    );
+    const inputValue = getInputValue(node)
+    systemVars.push({[`$${node.varName}`]: inputValue});
+    nextNodeById(node.next);
   }
   
   const outputHandler = (node: OutputNode): void => {
@@ -34,12 +21,10 @@ export const nodeHandler = (nodes: NodeTypes[]) => {
     nextNodeById(node.next);
   }
 
-  const delayHandler = (node: DelayNode): void => {
-    printToConsole(`We start a ${node.delay}ms wait`);
-    setTimeout(() => {
-      nextNodeById(node.next);
-    }, node.delay);
-  }
+  // const delayHandler = (node: DelayNode): void => {
+  //   printToConsole(`${{...node}}`);
+  //   nextNodeById(node.next);
+  // }
 
   const parseString = (input: string): string => {
     const regex = REGEX;
@@ -86,9 +71,9 @@ export const nodeHandler = (nodes: NodeTypes[]) => {
       case "output":
         outputHandler(node);
         break;
-      case "delay":
-        delayHandler(node);
-        break;
+      // case "delay":
+      //   delayHandler(node);
+      //   break;
       default:
         stop();
         break;
@@ -101,9 +86,8 @@ export const nodeHandler = (nodes: NodeTypes[]) => {
 
   const stop = () => {
     printToConsole("No more steps to take");
-    rl.close();
   }
 
-  return {inputHandler, outputHandler, getInputValue, start}
+  return {inputHandler, outputHandler, start}
 }
 
