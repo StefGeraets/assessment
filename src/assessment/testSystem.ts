@@ -21,10 +21,12 @@ export const nodeHandler = (nodes: NodeTypes[]) => {
     nextNodeById(node.next);
   }
 
-  // const delayHandler = (node: DelayNode): void => {
-  //   printToConsole(`${{...node}}`);
-  //   nextNodeById(node.next);
-  // }
+  const delayHandler = (node: DelayNode): void => {
+    printToConsole(`We start a ${node.delay}ms wait`);
+    setTimeout(() => {
+      nextNodeById(node.next);
+    }, node.delay);
+  }
 
   const parseString = (input: string): string => {
     const regex = REGEX;
@@ -71,9 +73,9 @@ export const nodeHandler = (nodes: NodeTypes[]) => {
       case "output":
         outputHandler(node);
         break;
-      // case "delay":
-      //   delayHandler(node);
-      //   break;
+      case "delay":
+        delayHandler(node);
+        break;
       default:
         stop();
         break;

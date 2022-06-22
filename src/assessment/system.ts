@@ -1,4 +1,4 @@
-import { InputNode, NodeId, NodeTypes, OutputNode, DelayNode } from "./index.d"
+import { InputNode, NodeId, NodeTypes, OutputNode, DelayNode, CoinNode } from "./index.d"
 const readline = require('readline');
 
 const REGEX = /\$[^\s\,\.\!\?\:]+/g;
@@ -39,6 +39,18 @@ export const nodeHandler = (nodes: NodeTypes[]) => {
     setTimeout(() => {
       nextNodeById(node.next);
     }, node.delay);
+  }
+
+  const coinHandler = (node: CoinNode): void => {
+    printToConsole("Do a coin flip");
+    const result = doCoinFlip();
+    printToConsole(`We got ${result}!`);
+    nextNodeById(node[result])
+  }
+
+  const doCoinFlip = (): "head" | "tail" => {
+    const flip = (Math.floor(Math.random() * 2) == 0);
+    return flip ? "head" : "tail";
   }
 
   const parseString = (input: string): string => {
@@ -88,6 +100,9 @@ export const nodeHandler = (nodes: NodeTypes[]) => {
         break;
       case "delay":
         delayHandler(node);
+        break;
+      case "coin":
+        coinHandler(node);
         break;
       default:
         stop();
