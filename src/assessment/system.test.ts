@@ -1,9 +1,19 @@
 import { nodeHandler } from "./testSystem";
 
 describe("NodeHandler", () => {
-  it("should accept array of nodes", () => {
-    const logSpy = jest.spyOn(console, "log");
+  let logSpy;
 
+  beforeEach(() => {
+    logSpy = jest.spyOn(console, "log");
+    jest.spyOn(global.Math, 'random').mockReturnValue(0.2);
+  })
+
+  afterEach(() => {
+    logSpy = jest.spyOn(console, "log").mockRestore();
+    jest.spyOn(global.Math, 'random').mockRestore();
+  })
+
+  it("should accept array of nodes", () => {
     const newSystem = nodeHandler([
       {
         "id": 1,
@@ -26,8 +36,6 @@ describe("NodeHandler", () => {
   });
 
   it("should handle next node", () => {
-    const logSpy = jest.spyOn(console, "log");
-
     const newSystem = nodeHandler([
       {
         "id": 1,
@@ -57,8 +65,6 @@ describe("NodeHandler", () => {
   });
 
   it.skip("should handle input nodes correctly", async () => {
-    const logSpy = jest.spyOn(console, "log");
-
     const newSystem = nodeHandler([
       {
         "id": 1,
@@ -81,7 +87,6 @@ describe("NodeHandler", () => {
   });
 
   it("should print when output node is present", () => {
-    const logSpy = jest.spyOn(console, "log");
     const newSystem = nodeHandler([
       {
         "id": 1,
@@ -98,7 +103,6 @@ describe("NodeHandler", () => {
   });
   
   it("should print variable string in output node", () => {
-    const logSpy = jest.spyOn(console, "log");
     const newSystem = nodeHandler([
       {
         "id": 1,
@@ -134,7 +138,6 @@ describe("NodeHandler", () => {
   });
 
   it("should print 'No more steps to take' when all nodes are handled", () => {
-    const logSpy = jest.spyOn(console, "log");
     const newSystem = nodeHandler([
       {
         "id": 1,
@@ -155,5 +158,36 @@ describe("NodeHandler", () => {
     expect(logSpy).toHaveBeenCalledTimes(2);
     expect(logSpy).toHaveBeenCalledWith("Some value here userInput");
     expect(logSpy).toHaveBeenCalledWith("No more steps to take");
+  });
+
+  it.todo("should wait a set amount of ms with a delayNode");
+  it("should choose heads or tails as a next step/node", () => {
+    const newSystem = nodeHandler([
+      {
+        "id": 1,
+        "type": "coin",
+        "head": 2,
+        "tail": 3
+      },
+      {
+        "id": 2,
+        "type": "output",
+        "text": "You got Heads",
+        "next": 4
+      },
+      {
+        "id": 3,
+        "type": "output",
+        "text": "You got Tails",
+        "next": 4
+      }
+    ])
+
+    newSystem.start();
+
+    expect(logSpy).toHaveBeenCalledTimes(4)
+    expect(logSpy).toHaveBeenCalledWith("Do a coin flip");
+    expect(logSpy).toHaveBeenCalledWith("We got head!");
+    expect(logSpy).toHaveBeenCalledWith("You got Heads");
   });
 })
