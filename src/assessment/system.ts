@@ -1,4 +1,4 @@
-import { InputNode, NodeId, NodeTypes, OutputNode } from "./index.d"
+import { InputNode, NodeId, NodeTypes, OutputNode, DelayNode } from "./index.d"
 
 const REGEX = /\$[^\s\,\.\!\?\:]+/g;
 
@@ -18,6 +18,11 @@ export const nodeHandler = (nodes: NodeTypes[]) => {
   const outputHandler = (node: OutputNode): void => {
     const parsedString = parseString(node.text);
     printToConsole(parsedString);
+    nextNodeById(node.next);
+  }
+
+  const delayHandler = (node: DelayNode): void => {
+    printToConsole(`${{...node}}`);
     nextNodeById(node.next);
   }
 
@@ -63,8 +68,11 @@ export const nodeHandler = (nodes: NodeTypes[]) => {
       case "input":
         inputHandler(node);
         break;
-        case "output":
+      case "output":
         outputHandler(node);
+        break;
+      case "delay":
+        delayHandler(node);
         break;
       default:
         printToConsole("No more steps to take");

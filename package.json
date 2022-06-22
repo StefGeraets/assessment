@@ -21,8 +21,9 @@
     "build": "react-scripts build",
     "test": "react-scripts test",
     "eject": "react-scripts eject",
-    "system:exec": "ts-node ./src/assessment/system.ts",
-    "inputOutput:exec": "ts-node ./src/assessment/inputOutput.ts"
+    "system:inOut": "ts-node ./src/assessment/console/inputOutput.ts",
+    "system:inOutDel": "ts-node ./src/assessment/console/inputOutputDelay.ts",
+    "system:all": "ts-node ./src/assessment/console/all.ts"
   },
   "eslintConfig": {
     "extends": [
