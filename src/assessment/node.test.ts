@@ -5,7 +5,6 @@ describe.skip("Input", () => {
     const newSystem = nodeHandler([{id: 1, type: "input", next: 2, varName: "henk"}]);
     newSystem.inputHandler({id: 1, type: "input", next: 2, varName: "henk"});
 
-    
   })
 
   it("should save input as given variable", () => {

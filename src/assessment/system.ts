@@ -54,14 +54,13 @@ export const nodeHandler = (nodes: NodeTypes[]) => {
   }
 
   const parseString = (input: string): string => {
-    const regex = REGEX;
-    const varMatch: string[] | null = input.match(regex);
+    const varMatch: string[] | null = input.match(REGEX);
 
     if (varMatch?.length && systemVars?.length) {
       const replaceVar = systemVars.find(obj => obj.hasOwnProperty(varMatch[0]))
       if (replaceVar === undefined) { return input };
       
-      const newInput = input.replace(regex, replaceVar[varMatch[0]])
+      const newInput = input.replace(REGEX, replaceVar[varMatch[0]])
       return newInput;
     }
 
