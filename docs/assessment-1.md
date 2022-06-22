@@ -8,3 +8,6 @@ Ik wil hierdoor ook inzicht krijgen in de mogelijkheden van het systeem. En aan 
 ## Systeem ideeen
 - Text base adventure
 - 
+
+## Testen
+Aangezien dit systeem een boom van nodes gaat afhandelen, wil ik ervoor zorgen dat elk nodetype getest wordt op haar kunnen. Maar ook het vervolg van de `next` property.
