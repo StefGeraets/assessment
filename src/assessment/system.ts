@@ -8,23 +8,52 @@ export const nodeHandler = (nodes: NodeTypes[]) => {
     return inputValue ? inputValue : "standard input";
   }
 
-  const inputHandler = (node: InputNode) => {
+  const inputHandler = (node: InputNode): void => {
     const inputValue = getInputValue();
     systemVars.push({[`$${node.varName}`]: inputValue});
     nextNodeById(node.next);
   }
 
-  const outputHandler = (node: OutputNode) => {
-    printToConsole(node.text);
+  const outputHandler = (node: OutputNode): void => {
+    const parsedString = parseString(node.text);
+    printToConsole(parsedString);
     nextNodeById(node.next);
+  }
+
+  const parseString = (input: string): string => {
+    const regex = /\$[^\s]+/g;
+    const varMatch: string[] | null = input.match(regex);
+
+    if (varMatch?.length && systemVars?.length) {
+      const replaceVar = systemVars.find(obj => obj.hasOwnProperty(varMatch[0]))
+      if (replaceVar === undefined) { return input };
+      
+      const newInput = input.replace(regex, replaceVar[varMatch[0]])
+      return newInput;
+    }
+
+    return input;
   }
 
   const printToConsole = (input: string): void => {
     console.log(input);
   }
 
+  const getNodeById = (id: NodeId): NodeTypes | undefined => {
+    const existingNode = nodes.find(obj => {return obj.id === id});
+    if (existingNode !== undefined) {
+      return existingNode;
+    }
+    return undefined;
+  }
+
   const nextNodeById = (id: NodeId): void => {
-    executeNodeByType(nodes[id]);
+    const nextNode = getNodeById(id);
+    if (nextNode !== undefined) {
+      executeNodeByType(nextNode);
+      return
+    }
+    return
   }
 
   const executeNodeByType = (node: NodeTypes): void => {
