@@ -1,12 +1,26 @@
-import { InputNode, NodeId, NodeTypes } from "./index.d"
+import { InputNode, NodeId, NodeTypes, OutputNode } from "./index.d"
 
 
 export const nodeHandler = (nodes: NodeTypes[]) => {
   const systemVars: {[K: string]: string}[] = [];
 
-  const inputHandler = (node: InputNode, inputValue: string) => {
+  const getInputValue = (inputValue?: string): string => {
+    return inputValue ? inputValue : "standard input";
+  }
+
+  const inputHandler = (node: InputNode) => {
+    const inputValue = getInputValue();
     systemVars.push({[`$${node.varName}`]: inputValue});
     nextNodeById(node.next);
+  }
+
+  const outputHandler = (node: OutputNode) => {
+    printToConsole(node.text);
+    nextNodeById(node.next);
+  }
+
+  const printToConsole = (input: string): void => {
+    console.log(input);
   }
 
   const nextNodeById = (id: NodeId): void => {
@@ -16,13 +30,16 @@ export const nodeHandler = (nodes: NodeTypes[]) => {
   const executeNodeByType = (node: NodeTypes): void => {
     switch (node.type) {
       case "input":
-        inputHandler(node, "do this");
+        inputHandler(node);
+        break;
+      case "output":
+        outputHandler(node);
         break;
       default:
         break;
     }
   }
 
-  return {inputHandler, systemVars}
+  return {inputHandler, outputHandler, systemVars}
 }
 

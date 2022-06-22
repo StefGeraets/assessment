@@ -10,17 +10,17 @@ export interface InputNode extends NodeTypeBase {
   varName: string;
 }
 
-export type OutputNode = {
+export interface OutputNode extends NodeTypeBase {
   type: "output";
   text: string;
 }
 
-export type DelayNode = {
+export interface DelayNode extends NodeTypeBase {
   type: "delay";
   delay: number;
 }
 
-export type CoinNode = {
+export interface CoinNode {
   id: NodeId;
   type: "coin";
   head: NodeId;
