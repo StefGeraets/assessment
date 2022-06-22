@@ -76,6 +76,6 @@ export const nodeHandler = (nodes: NodeTypes[]) => {
     executeNodeByType(nodes[0]);
   }
 
-  return {inputHandler, outputHandler, start}
+  return {inputHandler, outputHandler, start, systemVars}
 }
 
