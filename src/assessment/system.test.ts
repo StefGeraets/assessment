@@ -1,4 +1,5 @@
 import { nodeHandler } from "./testSystem";
+jest.useFakeTimers();
 
 describe("NodeHandler", () => {
   let logSpy;
@@ -160,7 +161,37 @@ describe("NodeHandler", () => {
     expect(logSpy).toHaveBeenCalledWith("No more steps to take");
   });
 
-  it.todo("should wait a set amount of ms with a delayNode");
+  it("should wait a set amount of ms with a delayNode", () => {
+    const newSystem = nodeHandler([
+      {
+        "id": 1,
+        "type": "output",
+        "text": "Start",
+        "next": 2
+      },
+      {
+        "id": 2,
+        "type": "delay",
+        "delay": 2000,
+        "next": 3
+      },
+      {
+        "id": 3,
+        "type": "output",
+        "text": "You waited",
+        "next": 4
+      }
+    ])
+
+    newSystem.start();
+
+    expect(logSpy).toHaveBeenCalledTimes(2);
+    expect(logSpy).toHaveBeenCalledWith("Start");
+    expect(logSpy).toHaveBeenCalledWith("We start a 2000ms wait");
+    jest.runAllTimers();
+    expect(logSpy).toHaveBeenCalledWith("You waited");
+  });
+
   it("should choose heads or tails as a next step/node", () => {
     const newSystem = nodeHandler([
       {
