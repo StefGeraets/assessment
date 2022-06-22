@@ -2,7 +2,7 @@
   {
     "id": 1,
     "type": "input",
-    "varName": "$value1",
+    "varName": "value1",
     "next": 2
   },
   {
@@ -20,7 +20,7 @@
   {
     "id": 4,
     "type": "input",
-    "varName": "$value2",
+    "varName": "value2",
     "next": 5
   },
   {
